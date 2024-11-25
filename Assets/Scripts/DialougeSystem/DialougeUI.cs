@@ -6,8 +6,10 @@ public class DialougeUI : MonoBehaviour
 {
     [SerializeField] private GameObject dialougeBox;
     [SerializeField] private TMP_Text txtLabel;
-    [SerializeField] private DialougeObject testD;
     
+    
+    public bool IsOpen { get;private set; }
+
     private TypeWriter typeWriter;
     private ResponseHandler responseHandler;
     
@@ -16,7 +18,7 @@ public class DialougeUI : MonoBehaviour
         typeWriter = GetComponent<TypeWriter>();
         responseHandler = GetComponent<ResponseHandler>();
         CloseDialougeBox();
-        ShowDialoge(testD);
+        
     }
     public void ShowDialoge(DialougeObject dialougeObject) 
     {
@@ -44,6 +46,7 @@ public class DialougeUI : MonoBehaviour
     }
     private void CloseDialougeBox()
     {
+        IsOpen = false;
         dialougeBox.SetActive(false);
         txtLabel.text = string.Empty;
     }

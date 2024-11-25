@@ -5,9 +5,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    [SerializeField] private DialougeUI dialougeUI;
     
     private Rigidbody2D rb;
     private Vector2 moveDirection;
+
+    public DialougeUI DialougeUI => dialougeUI;
+
+    public IInteractable interactable { get; set; }
     
     void Start()
     {
@@ -18,6 +23,13 @@ public class PlayerController : MonoBehaviour
     {
         moveDirection.x = Input.GetAxisRaw("Horizontal");
         moveDirection.y = Input.GetAxisRaw("Vertical");
+        if (Input.GetKeyDown(KeyCode.E)) 
+        { 
+            if(interactable != null) 
+            {
+                interactable.Interact(this);
+            }
+        }
     }
 
     void FixedUpdate()
