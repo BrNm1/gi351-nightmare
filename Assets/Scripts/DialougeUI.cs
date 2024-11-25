@@ -7,10 +7,14 @@ public class DialougeUI : MonoBehaviour
     [SerializeField] private GameObject dialougeBox;
     [SerializeField] private TMP_Text txtLabel;
     [SerializeField] private DialougeObject testD;
+    
     private TypeWriter typeWriter;
+    private ResponseHandler responseHandler;
+    
     private void Start()
     {
         typeWriter = GetComponent<TypeWriter>();
+        responseHandler = GetComponent<ResponseHandler>();
         CloseDialougeBox();
         ShowDialoge(testD);
     }
@@ -21,13 +25,22 @@ public class DialougeUI : MonoBehaviour
     }
     private IEnumerator StepthroughDialouge(DialougeObject dialougeObject) 
     {
-        yield return new WaitForSeconds(2);
-        foreach (string dialouge in dialougeObject.Dialouge) 
+        for (int i = 0; i < dialougeObject.Dialouge.Length; i++) 
         { 
-            yield return typeWriter.Run(dialouge,txtLabel);
-            yield return new WaitUntil(()=> Input.GetKeyDown(KeyCode.Space));
+            string dialouge = dialougeObject.Dialouge[i];
+            yield return typeWriter.Run(dialouge, txtLabel);
+
+            if (i == dialougeObject.Dialouge.Length - 1 && dialougeObject.Hasresponse) break;
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         }
-        CloseDialougeBox();
+        if (dialougeObject.Hasresponse)
+        {
+            responseHandler.ShowResponse(dialougeObject.Responses);
+        }
+        else
+        { 
+            CloseDialougeBox() ;
+        }
     }
     private void CloseDialougeBox()
     {
