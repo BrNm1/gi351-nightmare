@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public DialougeUI DialougeUI => dialougeUI;
 
     public IInteractable interactable { get; set; }
+    public bool warp = false;
     
     private Coroutine resetHealthCoroutine;
     
@@ -42,9 +44,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (!dialougeUI.IsOpen)
         {
-            TakeDamage(10f);
+            warp = true;
         }
     }
 
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour
         if (health < 0)
         {
             health = 0;
+            StartCoroutine(Die());
         }
         healthBar.value = health;
         
@@ -66,6 +69,12 @@ public class PlayerController : MonoBehaviour
         }
         
         resetHealthCoroutine = StartCoroutine(ResetHealthAfterDelay(5f));
+    }
+
+    private IEnumerator Die()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadSceneAsync(2);
     }
     
     private IEnumerator ResetHealthAfterDelay(float delay)

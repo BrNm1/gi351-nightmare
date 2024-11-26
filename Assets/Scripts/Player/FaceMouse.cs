@@ -17,6 +17,12 @@ public class FaceMouse : MonoBehaviour
     
     private PlayerController player;
     
+    public AudioSource audio;
+    public AudioClip openSound;
+    public AudioClip closeSound;
+    
+    private float soundCont;
+    
     void Start()
     {
         player = FindObjectOfType<PlayerController>();
@@ -36,6 +42,7 @@ public class FaceMouse : MonoBehaviour
                 if (light != null)
                 {
                     light.enabled = isLightOn;
+                    PlayOpenSound();
                 }
             }
         }
@@ -71,6 +78,21 @@ public class FaceMouse : MonoBehaviour
         UpdateAnimation(direction);
         
         RotateCharacter(direction);
+    }
+    
+    private void PlayOpenSound()
+    {
+        soundCont = (soundCont % 2) + 1;
+        
+        switch (soundCont)
+        {
+            case 1:
+                audio.PlayOneShot(openSound);
+                break;
+            case 2:
+                audio.PlayOneShot(closeSound);
+                break;
+        }
     }
     
     void UpdateAnimation(Vector2 direction)
