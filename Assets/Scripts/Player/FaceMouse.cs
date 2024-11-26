@@ -7,9 +7,14 @@ public class FaceMouse : MonoBehaviour
 {
     public Light2D light;
     public bool isLightOn = false;
+    public Animator animator;
+    
+    private Vector2 lastDirection = Vector2.zero;
+    private PlayerController player;
     
     void Start()
     {
+        player = FindObjectOfType<PlayerController>();
         light.enabled = isLightOn;
         //transform.rotation = Quaternion.Euler(0, 0, 0);
     }
@@ -24,13 +29,32 @@ public class FaceMouse : MonoBehaviour
                 light.enabled = isLightOn;
             }
         }
+        float speed = player.moveDirection.magnitude;
+        animator.SetFloat("Move", speed);
         
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
-        Vector2 direction = mousePos - (Vector2)transform.position;
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
         
+        Vector2 direction = (mousePosition - transform.position).normalized;
+        
+        UpdateAnimation(direction);
+        
+        RotateCharacter(direction);
+    }
+    
+    void UpdateAnimation(Vector2 direction)
+    {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        animator.SetFloat("Angle", angle);
+    }
+    
+    void RotateCharacter(Vector2 direction)
+    {
+        if (direction.magnitude > 0.1f)
+        {
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
     }
 }

@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private DialougeUI dialougeUI;
     
     private Rigidbody2D rb;
-    private Vector2 moveDirection;
+    public Vector2 moveDirection;
 
     public DialougeUI DialougeUI => dialougeUI;
 
