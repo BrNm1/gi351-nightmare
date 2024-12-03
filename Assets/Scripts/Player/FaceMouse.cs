@@ -20,8 +20,10 @@ public class FaceMouse : MonoBehaviour
     public AudioSource audio;
     public AudioClip openSound;
     public AudioClip closeSound;
+    private bool isLight = false;
     
     private float soundCont;
+    private GameObject battery;
     
     void Start()
     {
@@ -34,7 +36,7 @@ public class FaceMouse : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && isLight)
         {
             if (batteryLife > 0)
             {
@@ -45,6 +47,11 @@ public class FaceMouse : MonoBehaviour
                     PlayOpenSound();
                 }
             }
+        }
+        if (Input.GetKeyDown(KeyCode.E) && battery != null)
+        {
+            RechargeBattery(batteryMaxLife);
+            Destroy(battery);
         }
         
         if (isLightOn && batteryLife > 0)
@@ -141,8 +148,20 @@ public class FaceMouse : MonoBehaviour
         if (collision.CompareTag("Battery"))
         {
             Debug.Log(collision.gameObject.name);
-            RechargeBattery(20f);
-            Destroy(collision.gameObject);
+            battery = collision.gameObject;
+        }
+
+        if (collision.CompareTag("isLight"))
+        {
+            isLight = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Battery"))
+        {
+            battery = null;
         }
     }
 }
